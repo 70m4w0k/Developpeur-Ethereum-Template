@@ -6,13 +6,13 @@ Faire un compte d’épargne sur la blockchain!
 
 On a le droit de transférer au compte de l’argent quand on le souhaite
 
-1 - Ajouter un admin au déploiement du contrat.
-2 - Ajouter la condition suivante : l'admin ne peut récupérer les fonds qu'après 3 mois après la
+1. Ajouter un admin au déploiement du contrat.
+2. Ajouter la condition suivante : l'admin ne peut récupérer les fonds qu'après 3 mois après la
     première transaction
-3 - On peut évidemment rajouter de l’argent sur le contrat régulièrement. Faire une fonction
+3. On peut évidemment rajouter de l’argent sur le contrat régulièrement. Faire une fonction
     pour ça, et garder un historique (simple, d’un numero vers une quantité) des dépots dans un
     mapping.
-4 - Mettre en commentaire les fonctions d’admin, et rajouter onlyOwner
+4. Mettre en commentaire les fonctions d’admin, et rajouter onlyOwner
 
 ## 2. Deviner c'est Gagner
 
@@ -23,13 +23,13 @@ Les joueurs vont tenter de découvrir ce mot en faisant un essai
 
 Le jeu doit donc :
 
-1 - instancier un owner
-2 - permettre a l'owner de mettre un mot et un indice
-3 - les autres joueurs vont avoir un getter sur l'indice
-4 - ils peuvent proposer un mot, qui sera comparé au mot référence, return un boolean
-5 - les joueurs seront inscrit dans un mapping qui permet de savoir si il a déjà joué
-6 - avoir un getter, qui donne si il existe le gagnant.
-7 - facultatif (necessite un array): faire un reset du jeu pour relancer une instance
+1. instancier un owner
+2. permettre a l'owner de mettre un mot et un indice
+3. les autres joueurs vont avoir un getter sur l'indice
+4. ils peuvent proposer un mot, qui sera comparé au mot référence, return un boolean
+5. les joueurs seront inscrit dans un mapping qui permet de savoir si il a déjà joué
+6. avoir un getter, qui donne si il existe le gagnant.
+7. facultatif (necessite un array): faire un reset du jeu pour relancer une instance
 
 ## 3. Shop
 
@@ -133,12 +133,12 @@ Cet exercice consiste à écrire un smart contract qui permet de simuler le fonc
 
 Les instructions suivantes peuvent vous aider : 
 
-1 - Votre smart contract doit s’appeler “Bank”. 
-2 - Votre smart contract doit utiliser la dernière version du compilateur.
-3 - Votre smart contract doit définir un mapping _balances qui détient le solde détenu par un compte.
-4 - Votre smart contract doit définir une fonction deposit qui permet à son appelant de déposer de l’argent dans son compte. Elle prend comme paramètre un uint _amount.
-5 - Votre smart contract doit définir une fonction transfer qui permet à son appelant de transférer de l’argent de son propre compte à un autre compte. Elle prend comme paramètre une address _recipient et un uint _amount.
-6 - Votre smart contract doit définir une fonction balanceOf qui renvoie le solde détenu par un compte. Elle prend comme paramètre une address _address. 
+1. Votre smart contract doit s’appeler “Bank”. 
+2. Votre smart contract doit utiliser la dernière version du compilateur.
+3. Votre smart contract doit définir un mapping _balances qui détient le solde détenu par un compte.
+4. Votre smart contract doit définir une fonction deposit qui permet à son appelant de déposer de l’argent dans son compte. Elle prend comme paramètre un uint _amount.
+5. Votre smart contract doit définir une fonction transfer qui permet à son appelant de transférer de l’argent de son propre compte à un autre compte. Elle prend comme paramètre une address _recipient et un uint _amount.
+6. Votre smart contract doit définir une fonction balanceOf qui renvoie le solde détenu par un compte. Elle prend comme paramètre une address _address. 
 
 
 ## 12. Random
@@ -146,11 +146,11 @@ Les instructions suivantes peuvent vous aider :
 Comment générer des nombres aléatoires dans Solidity ?
 https://medium.com/coinmonks/how-to-generate-random-numbers-on-ethereum-using-vrf-8250839dd9e2
 
-1 - Votre smart contract doit s'appeler “Random”. 
-2 - Votre smart contract doit utiliser la dernière version du compilateur.
-3 - Votre smart contract doit définir uint appelé nonce de visibilité private, et fixez-le à 0.
-4 - Votre smart contract doit définir une fonction random qui retourne un nombre aléatoire entre 0 et 100. random doit utiliser la fonction de hachage keccak256. 
-5 - Enfin, elle doit (en une ligne de code) calculer le typecast uint du hash keccak256 des paramètres suivants : block.timestamp, msg.sender, nonce. 
+1. Votre smart contract doit s'appeler “Random”. 
+2. Votre smart contract doit utiliser la dernière version du compilateur.
+3. Votre smart contract doit définir uint appelé nonce de visibilité private, et fixez-le à 0.
+4. Votre smart contract doit définir une fonction random qui retourne un nombre aléatoire entre 0 et 100. random doit utiliser la fonction de hachage keccak256. 
+5. Enfin, elle doit (en une ligne de code) calculer le typecast uint du hash keccak256 des paramètres suivants : block.timestamp, msg.sender, nonce. 
 
 ## 13. Admin
 
@@ -158,14 +158,14 @@ Ecrire un smart contract qui permet de simuler un système d’administration.
 
 Les instructions suivantes peuvent vous aider : 
 
-1 - Votre smart contract doit s'appeler “Admin”. 
-2 - Votre smart contract doit utiliser la dernière version du compilateur.
-3 - L’administrateur est celui qui va déployer le smart contract. 
-4 - L’administrateur est le seul qui a le droit d’autoriser un compte Ethereum à l’aide de la fonction “whitelist”.
-5 - L’administrateur est le seul qui a le droit de bloquer un compte Ethereum à l’aide de la fonction “blacklist”.
-6 - Votre smart contract doit définir une fonction isWhitelisted qui retourne un compte whitelisté.
-7 - Votre smart contract doit définir une fonction isBlacklisted qui retourne un compte blacklisté.
-8 - Votre smart contract doit définir deux événements “Whitelisted” et “Blacklisted”.
-9 - L’utilisation du type mapping est exigée. 
-10 - L’utilisation d’un modifier est exigée. 
-11 - L’import de la librairie “Ownable” d’OpenZepplin est obligatoire. 
+1. Votre smart contract doit s'appeler “Admin”. 
+2. Votre smart contract doit utiliser la dernière version du compilateur.
+3. L’administrateur est celui qui va déployer le smart contract. 
+4. L’administrateur est le seul qui a le droit d’autoriser un compte Ethereum à l’aide de la fonction “whitelist”.
+5. L’administrateur est le seul qui a le droit de bloquer un compte Ethereum à l’aide de la fonction “blacklist”.
+6. Votre smart contract doit définir une fonction isWhitelisted qui retourne un compte whitelisté.
+7. Votre smart contract doit définir une fonction isBlacklisted qui retourne un compte blacklisté.
+8. Votre smart contract doit définir deux événements “Whitelisted” et “Blacklisted”.
+9. L’utilisation du type mapping est exigée. 
+10. L’utilisation d’un modifier est exigée. 
+11. L’import de la librairie “Ownable” d’OpenZepplin est obligatoire. 
