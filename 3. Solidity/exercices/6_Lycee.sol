@@ -7,10 +7,9 @@ contract Lycee {
         uint maths;
         uint french;
     }
-    // professor's address => course's name (biology,maths, french)
+    // class => addr => course
     mapping(string => mapping(address => string)) public professors;
 
-    // class => StudentGrades[]
     mapping(string => StudentGrades[]) public students;
 
     constructor() {
@@ -87,4 +86,6 @@ contract Lycee {
             return false;
         }
     }
+
+    function stringEquals() public {}
 }
