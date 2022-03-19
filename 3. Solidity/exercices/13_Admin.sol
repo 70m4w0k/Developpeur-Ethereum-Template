@@ -16,16 +16,19 @@ contract Admin is Ownable {
    event Blacklisted(address _address);
 
    function whitelist(address _address) public onlyOwner {
+       require(list[_address] != addressStatus.Whitelist, "This address is already whitelisted");
        list[_address] = addressStatus.Whitelist;
        emit Whitelisted(_address); // Triggering event
    }
 
    function blacklist(address _address) public onlyOwner {
+       require(list[_address] != addressStatus.Blacklist, "This address is already blacklisted");
        list[_address] = addressStatus.Blacklist;
        emit Blacklisted(_address); // Triggering event
    }
 
    function plebs(address _address) public onlyOwner {
+       require(list[_address] != addressStatus.Default, "This address is already plebs");
        list[_address] = addressStatus.Default;
    }
 

@@ -8,7 +8,7 @@ contract Whitelist is Ownable {
        Default,
        Blacklist,
        Whitelist
-   }
+    }
 
    mapping(address => addressStatus) list;
 
