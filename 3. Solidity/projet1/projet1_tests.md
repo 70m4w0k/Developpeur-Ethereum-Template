@@ -1,15 +1,21 @@
 adresse 1: 0x5B38Da6a701c568545dCfcB03FcB875f56beddC4 owner
+
 adresse 2: 0xAb8483F64d9C6d1EcF9b849Ae677dD3315835cb2 registred
+
 adresse 3: 0x4B20993Bc481177ec7E8f571ceCaE8A9e22C02db registred
+
 adresse 4: 0x78731D3Ca6b7E34aC0F824c42a7cC18A495cabaB registred
+
 adresse 5: 0x617F2E2fD72FD9D5503197092aC168c91465E7f2 unregistred
 
-                 id            description             
+["0xAb8483F64d9C6d1EcF9b849Ae677dD3315835cb2", "0x4B20993Bc481177ec7E8f571ceCaE8A9e22C02db", "0x78731D3Ca6b7E34aC0F824c42a7cC18A495cabaB"]
 
-proposition 1  |  0  |  pour la retraite à 60 ans  |
-proposition 2  |  1  |  pour la retraite à 70 ans  |
-proposition 3  |  2  |  pour la retraite à 90 ans  |
-proposition 4  |  3  |  pour plus de retraite      |
+                     id            description             
+
+    proposition 1  |  0  |  pour la retraite à 60 ans  |
+    proposition 2  |  1  |  pour la retraite à 70 ans  |
+    proposition 3  |  2  |  pour la retraite à 90 ans  |
+    proposition 4  |  3  |  pour plus de retraite      |
 
 OK - L'administrateur du vote enregistre une liste blanche d'électeurs identifiés par leur adresse Ethereum.
 
@@ -161,14 +167,3 @@ OK - au choix, tu peux etre verbeux comme au contraire etre tres concis et avoir
 ## Votes
 
 15b. adresse 5 vote pour proposition 1 => NOK : non enregistré
-
-
-# Cas pas de proposition
-
-## whitelist
-
-## Propositions
-
-## Votes
-
-19. adresse 2 vote pour proposition 2 => NOK : pas de proposition

@@ -16,9 +16,13 @@ contract Voting is Ownable {
         uint voteCount;
     }
 
+     /**
+     * @dev Status that keep track of the workflow 
+     * WorkflowStatus |0|1|2|3|4|5|
+     */
     enum WorkflowStatus {
-        RegisteringVoters,
-        ProposalsRegistrationStarted,
+        RegisteringVoters,             
+        ProposalsRegistrationStarted,   
         ProposalsRegistrationEnded,
         VotingSessionStarted,
         VotingSessionEnded,
@@ -41,13 +45,8 @@ contract Voting is Ownable {
         _;
     }
 
-    modifier proposalSessionOpen() {
-        require(isProposalSessionStarted, "proposals session is not yet open");
-        _;
-    }
-
-    modifier voteSessionOpen() {
-        require(isVotingSessionStarted, "proposals session is not yet open");
+    modifier withStatus(WorkflowStatus _status) {
+        require(_status == wfStatus, "incorrect workflow");
         _;
     }
 
@@ -56,9 +55,10 @@ contract Voting is Ownable {
     Proposal[] public proposals;
     Proposal[] public winners;
 
-    bool public isProposalSessionStarted = false; // private
-    bool public isVotingSessionStarted = false; // private
-
+    uint totalVotes;
+    uint totalVoters;
+    WorkflowStatus public wfStatus = WorkflowStatus.VotesTallied;
+    
     /**
      * @dev Returns proposals that have won previous votes
      */
@@ -69,8 +69,8 @@ contract Voting is Ownable {
     /**
      * @dev Returns proposal by id
      */
-    function getProposal(uint _proposalId) external view returns(string memory) {
-        return proposals[_proposalId].description;
+    function getProposal(uint _proposalId) external view returns(Proposal memory) {
+        return proposals[_proposalId];
     }
 
     /**
@@ -81,15 +81,47 @@ contract Voting is Ownable {
     }
 
     /**
+     * @dev Updates the workflow status by adding +1 until last status : VotesTallied and go back to zero
+     */
+    function updateStatus() internal {
+        uint newStatus;
+        (WorkflowStatus(wfStatus) == WorkflowStatus.VotesTallied)? 
+            newStatus = 0 : newStatus = uint(WorkflowStatus(wfStatus)) + 1; 
+
+        emit WorkflowStatusChange(WorkflowStatus(wfStatus), WorkflowStatus(newStatus));
+
+        wfStatus = WorkflowStatus(newStatus);
+    }
+
+    /**
      * @dev Allows owner to register addresses for participation 
-     * WorkflowStatusChange |1|2|3|4|5|6|
+     * WorkflowStatusChange |0|1|2|3|4|5|
      *                       ^
      */
-    function whitelist(address _address) external onlyOwner {
-        voters[_address].isRegistered = true;
+    function whitelist(address[] memory _addresses) external onlyOwner withStatus(WorkflowStatus.VotesTallied) {
+        init();
+        for (uint i = 0; i < _addresses.length; i++) {
+            whitelistOne(_addresses[i]);
+        }
+    
+        updateStatus();
+    }
 
-        emit VoterRegistered(_address); 
-        emit WorkflowStatusChange(WorkflowStatus.RegisteringVoters, WorkflowStatus.RegisteringVoters);
+    function init() internal {
+        for (uint i = 0; i < totalVoters; i++) {
+            
+        }
+    }
+
+    /**
+     * @dev Registers the given address for participation
+     */
+    function whitelistOne(address _address) internal {
+        Voter memory voter = Voter(true, false, 0);
+        voters[_address] = voter;
+        totalVoters++;
+
+        emit VoterRegistered(_address);
     }
 
     /**
@@ -103,33 +135,28 @@ contract Voting is Ownable {
 
      /**
      * @dev Allows owner to start a proposal session
-     * WorkflowStatusChange |1|2|3|4|5|6|
+     * WorkflowStatusChange |0|1|2|3|4|5|
      *                         ^
      */
-    function startProposalSession() external onlyOwner {
-        require(!isProposalSessionStarted, "proposals session is already open");
+    function startProposalSession() external onlyOwner withStatus(WorkflowStatus.RegisteringVoters){
 
-        isProposalSessionStarted = true;
-
-        emit WorkflowStatusChange(WorkflowStatus.RegisteringVoters, WorkflowStatus.ProposalsRegistrationStarted);
+        updateStatus();
     }
 
      /**
      * @dev Allows owner to stop a proposal session
-     * WorkflowStatusChange |1|2|3|4|5|6|
+     * WorkflowStatusChange |0|1|2|3|4|5|
      *                           ^
      */
-    function stopProposalSession() external onlyOwner proposalSessionOpen {
+    function stopProposalSession() external onlyOwner proposalExists withStatus(WorkflowStatus.ProposalsRegistrationStarted) {
 
-        isProposalSessionStarted = false;
-
-        emit WorkflowStatusChange(WorkflowStatus.ProposalsRegistrationStarted, WorkflowStatus.ProposalsRegistrationEnded);
+        updateStatus();
     }
 
     /**
      * @dev Allows registred voters to propose as many _prop as they want
      */
-    function propose(string memory _prop) external onlyRegistred proposalSessionOpen {
+    function propose(string memory _prop) external onlyRegistred {
 
         Proposal memory p = Proposal(_prop, 0);
         proposals.push(p);
@@ -139,61 +166,57 @@ contract Voting is Ownable {
 
      /**
      * @dev Allows owner to stop a proposal session  
-     * WorkflowStatusChange |1|2|3|4|5|6|
+     * WorkflowStatusChange |0|1|2|3|4|5|
      *                             ^
      */
-    function startVotingSession() external onlyOwner proposalExists {
-        require(!isVotingSessionStarted, "voting session is already open");
+    function startVotingSession() external onlyOwner withStatus(WorkflowStatus.ProposalsRegistrationEnded) {
 
-        isVotingSessionStarted = true;
-
-        emit WorkflowStatusChange(WorkflowStatus.ProposalsRegistrationEnded, WorkflowStatus.VotingSessionStarted);
+        updateStatus();
     }
 
      /**
      * @dev Allows owner to stop a proposal session  
-     * WorkflowStatusChange |1|2|3|4|5|6|
+     * WorkflowStatusChange |0|1|2|3|4|5|
      *                               ^
      */
-    function stopVotingSession() external onlyOwner voteSessionOpen {
-
-        isVotingSessionStarted = false;
-
-        emit WorkflowStatusChange(WorkflowStatus.VotingSessionStarted, WorkflowStatus.VotingSessionEnded);
+    function stopVotingSession() external onlyOwner withStatus(WorkflowStatus.VotingSessionStarted) {
+        require(totalVotes > 0, "no votes yet");
+        updateStatus();
     }
 
     /**
      *  @dev Allows registred voters to vote once for the proposal of their choice
      */
-    function vote(uint _propositionId) external onlyRegistred voteSessionOpen {
+    function vote(uint _propositionId) external onlyRegistred withStatus(WorkflowStatus.VotingSessionStarted) {
         require(!voters[msg.sender].hasVoted, "you already voted");
 
         proposals[_propositionId].voteCount++;
         voters[msg.sender].hasVoted = true;
         voters[msg.sender].votedProposalId = _propositionId;
+        totalVotes++;
 
         emit Voted(msg.sender, _propositionId);
     }
 
     /**
     * @dev Allows owner to stop a proposal session  
-    * WorkflowStatusChange |1|2|3|4|5|6|
+    * WorkflowStatusChange |0|1|2|3|4|5|
     *                                 ^
     */
-    function countVotes() external onlyOwner proposalExists {
-        require(!isVotingSessionStarted, "the voting session needs to be closed for the count");
+    function countVotes() external onlyOwner withStatus(WorkflowStatus.VotingSessionEnded) {
 
         uint highestVote = getHighestVote();
         setWinners(highestVote);
 
-        emit WorkflowStatusChange(WorkflowStatus.VotingSessionEnded, WorkflowStatus.VotesTallied);
+        updateStatus();
+        totalVotes = 0;
     }
 
     /**
      * @dev Compares all the proposals to the highest vote to manage ties
      */
     function setWinners(uint _highestVote) internal {
-        for (uint i=0; i < proposals.length; i++) {
+        for (uint i = 0; i < proposals.length; i++) {
             if (proposals[i].voteCount == _highestVote) {
                 winners.push(proposals[i]);
             }
@@ -205,7 +228,7 @@ contract Voting is Ownable {
      */
     function getHighestVote() internal view proposalExists returns(uint) {
         uint currentScore;
-        for (uint i=0; i < proposals.length; i++) {
+        for (uint i = 0; i < proposals.length; i++) {
             if (proposals[i].voteCount > currentScore) {
                 currentScore = proposals[i].voteCount;
             }
