@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: GPL-3.0
 pragma solidity ^0.8.9;
 
-import "../node_modules/@openzeppelin/contracts/access/Ownable.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
 
 contract Voting is Ownable { 
 
@@ -12,6 +12,7 @@ contract Voting is Ownable {
     }
 
     struct Proposal {
+        uint sessionId;
         string description;
         uint voteCount;
     }
@@ -36,7 +37,7 @@ contract Voting is Ownable {
     event WorkflowStatusChange(WorkflowStatus previousStatus, WorkflowStatus newStatus);
     
     modifier onlyRegistred() { 
-        require(voters[msg.sender].isRegistered, "you are not registred");
+        require(voters[currentSession][msg.sender].isRegistered, "you are not registred");
         _;
     }
 
@@ -50,17 +51,21 @@ contract Voting is Ownable {
         _;
     }
 
-    mapping(address => Voter) public voters;
+    // session id => address => Voter
+    mapping(uint => mapping(address => Voter)) public voters;
 
     Proposal[] public proposals;
     Proposal[] public winners;
 
+    uint public currentSession;
     uint totalVotes;
     uint totalVoters;
     WorkflowStatus public wfStatus = WorkflowStatus.VotesTallied;
     
     /**
-     * @dev Returns proposals that have won previous votes
+     * @dev Returns all the Proposals that have won the previous sessions as :
+     * 
+     *          { sessionId, description, numberOfVotes }
      */
     function getWinners() external view returns(Proposal[] memory) {
         return winners;
@@ -94,12 +99,23 @@ contract Voting is Ownable {
     }
 
     /**
+     * @dev Updates the session # and clears proposals  
+     */
+    function initialize() internal {
+        currentSession++;
+        while (proposals.length > 0) {
+            proposals.pop();
+        }
+    }
+
+    /**
      * @dev Allows owner to register addresses for participation 
      * WorkflowStatusChange |0|1|2|3|4|5|
      *                       ^
      */
     function whitelist(address[] memory _addresses) external onlyOwner withStatus(WorkflowStatus.VotesTallied) {
-        init();
+        initialize();
+
         for (uint i = 0; i < _addresses.length; i++) {
             whitelistOne(_addresses[i]);
         }
@@ -107,28 +123,22 @@ contract Voting is Ownable {
         updateStatus();
     }
 
-    function init() internal {
-        for (uint i = 0; i < totalVoters; i++) {
-            
-        }
-    }
-
     /**
      * @dev Registers the given address for participation
      */
     function whitelistOne(address _address) internal {
         Voter memory voter = Voter(true, false, 0);
-        voters[_address] = voter;
+        voters[currentSession][_address] = voter;
         totalVoters++;
 
         emit VoterRegistered(_address);
     }
 
     /**
-     * @dev Allows owner to unregister addresses for participation
+     * @dev Allows owner to unregister address for participation
      */
     function greylist(address _address) external onlyOwner {
-        voters[_address].isRegistered = false;
+        voters[currentSession][_address].isRegistered = false;
 
         emit VoterUnregistered(_address);
     }
@@ -156,9 +166,9 @@ contract Voting is Ownable {
     /**
      * @dev Allows registred voters to propose as many _prop as they want
      */
-    function propose(string memory _prop) external onlyRegistred {
+    function propose(string memory _prop) external onlyRegistred withStatus(WorkflowStatus.ProposalsRegistrationStarted){
 
-        Proposal memory p = Proposal(_prop, 0);
+        Proposal memory p = Proposal(currentSession, _prop, 0);
         proposals.push(p);
 
         emit ProposalRegistered(proposals.length-1);
@@ -188,11 +198,11 @@ contract Voting is Ownable {
      *  @dev Allows registred voters to vote once for the proposal of their choice
      */
     function vote(uint _propositionId) external onlyRegistred withStatus(WorkflowStatus.VotingSessionStarted) {
-        require(!voters[msg.sender].hasVoted, "you already voted");
+        require(!voters[currentSession][msg.sender].hasVoted, "you already voted");
 
         proposals[_propositionId].voteCount++;
-        voters[msg.sender].hasVoted = true;
-        voters[msg.sender].votedProposalId = _propositionId;
+        voters[currentSession][msg.sender].hasVoted = true;
+        voters[currentSession][msg.sender].votedProposalId = _propositionId;
         totalVotes++;
 
         emit Voted(msg.sender, _propositionId);
@@ -224,7 +234,7 @@ contract Voting is Ownable {
     }
 
     /**
-     * @dev Returns the proposal that have the highest number of votes 
+     * @dev Returns the proposal that have the highest number of votes in the current session
      */
     function getHighestVote() internal view proposalExists returns(uint) {
         uint currentScore;

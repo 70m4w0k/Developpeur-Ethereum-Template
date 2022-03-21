@@ -1,21 +1,7 @@
-adresse 1: 0x5B38Da6a701c568545dCfcB03FcB875f56beddC4 owner
 
-adresse 2: 0xAb8483F64d9C6d1EcF9b849Ae677dD3315835cb2 registred
+# Projet - Système de vote 
 
-adresse 3: 0x4B20993Bc481177ec7E8f571ceCaE8A9e22C02db registred
-
-adresse 4: 0x78731D3Ca6b7E34aC0F824c42a7cC18A495cabaB registred
-
-adresse 5: 0x617F2E2fD72FD9D5503197092aC168c91465E7f2 unregistred
-
-["0xAb8483F64d9C6d1EcF9b849Ae677dD3315835cb2", "0x4B20993Bc481177ec7E8f571ceCaE8A9e22C02db", "0x78731D3Ca6b7E34aC0F824c42a7cC18A495cabaB"]
-
-                     id            description             
-
-    proposition 1  |  0  |  pour la retraite à 60 ans  |
-    proposition 2  |  1  |  pour la retraite à 70 ans  |
-    proposition 3  |  2  |  pour la retraite à 90 ans  |
-    proposition 4  |  3  |  pour plus de retraite      |
+https://formation.alyra.fr/products/developpeur-blockchain/categories/2149052575/posts/2153025072
 
 OK - L'administrateur du vote enregistre une liste blanche d'électeurs identifiés par leur adresse Ethereum.
 
@@ -27,7 +13,7 @@ OK - L'administrateur de vote met fin à la session d'enregistrement des proposi
 
 OK - L'administrateur du vote commence la session de vote.
 
-OK - Les électeurs inscrits votent pour leurs propositions préférées.
+OK - Les électeurs inscrits votent pour leur proposition préférée.
 
 OK - L'administrateur du vote met fin à la session de vote.
 
@@ -42,6 +28,7 @@ OK - Votre smart contract doit utiliser la dernière version du compilateur.
 OK - L’administrateur est celui qui va déployer le smart contract. 
 
 OK - Votre smart contract doit définir les structures de données suivantes : 
+
     struct Voter {
         bool isRegistered;
         bool hasVoted;
@@ -54,6 +41,7 @@ OK - Votre smart contract doit définir les structures de données suivantes :
     }
 
 OK - Votre smart contract doit définir une énumération qui gère les différents états d’un vote
+
     enum WorkflowStatus {
         RegisteringVoters,
         ProposalsRegistrationStarted,
@@ -77,13 +65,34 @@ OK - il faut faire en sorte que l'on puisse voir pour quelle proposal a voté un
 
 OK - cas d'égalité n'est pas à gérer en effet, si vous le faites bien c'est benefique
 
-OK - les details que tu souhaites, de manière logique ça peut etre la proposal comme son vote count
-
 OK - tu peux ajouter ce que tu veux tant que ce qui est donné reste tel quel
 
 OK - au choix, tu peux etre verbeux comme au contraire etre tres concis et avoir un message d'erreur commun, fais ce qui te semble le plus adapté
 
+# TESTS
 
+adresse 1: 0x5B38Da6a701c568545dCfcB03FcB875f56beddC4 owner registred
+
+adresse 2: 0xAb8483F64d9C6d1EcF9b849Ae677dD3315835cb2 registred
+
+adresse 3: 0x4B20993Bc481177ec7E8f571ceCaE8A9e22C02db registred
+
+adresse 4: 0x78731D3Ca6b7E34aC0F824c42a7cC18A495cabaB registred
+
+adresse 5: 0x617F2E2fD72FD9D5503197092aC168c91465E7f2 unregistred
+
+whitelist :
+["0x5B38Da6a701c568545dCfcB03FcB875f56beddC4", "0xAb8483F64d9C6d1EcF9b849Ae677dD3315835cb2", "0x4B20993Bc481177ec7E8f571ceCaE8A9e22C02db", "0x78731D3Ca6b7E34aC0F824c42a7cC18A495cabaB"]
+
+                     id            description             
+
+    proposition 1  |  0  |  pour la retraite à 60 ans  |
+    proposition 2  |  1  |  pour la retraite à 70 ans  |
+    proposition 3  |  2  |  pour la retraite à 90 ans  |
+    proposition 4  |  3  |  pour plus de retraite      |
+
+
+# Workflow
 
 1. adresse 1 deploie le contrat 
 
