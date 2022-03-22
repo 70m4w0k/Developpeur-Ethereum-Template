@@ -6,6 +6,8 @@ https://formation.alyra.fr/products/developpeur-blockchain/categories/2149052575
 
 Le smart contrat permet d'organiser différents votes les uns après les autres.
 
+La `struct Proposal` contient `sessionId` qui permet de différencier les différentes sessions de vote.
+
 Uniquement les propositions gagnantes sont enregistrées d'une session à l'autre.
 
 On garde néanmoins l'historique de vote des voters sur toutes les sessions.
@@ -18,15 +20,16 @@ format de l'input : `["address1", "address2", "address3"]`
 
 # Workflow - Cas normal
 
-adresse 1: administrateur
+    adresse 1: administrateur
 
-adresse 2: registred
+    adresse 2: registred
 
-adresse 3: registred
+    adresse 3: registred
 
-adresse 4: registred
+    adresse 4: registred
 
-adresse 4: unregistred
+    adresse 4: unregistred
+
 
 1. adresse 1 deploie le contrat 
 
