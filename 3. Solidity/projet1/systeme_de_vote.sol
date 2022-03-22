@@ -57,9 +57,9 @@ contract Voting is Ownable {
     Proposal[] public proposals;
     Proposal[] public winners;
 
-    uint public currentSession;
-    uint totalVotes;
-    uint totalVoters;
+    uint private currentSession;
+    uint private totalVotes;
+    uint private totalVoters;
     WorkflowStatus public wfStatus = WorkflowStatus.VotesTallied;
     
     /**
@@ -86,6 +86,16 @@ contract Voting is Ownable {
     }
 
     /**
+     * @dev Updates the session # and clears proposals  
+     */
+    function initialize() internal {
+        currentSession++;
+        while (proposals.length > 0) {
+            proposals.pop();
+        }
+    }
+
+    /**
      * @dev Updates the workflow status by adding +1 until last status : VotesTallied and go back to zero
      */
     function updateStatus() internal {
@@ -96,16 +106,6 @@ contract Voting is Ownable {
         emit WorkflowStatusChange(WorkflowStatus(wfStatus), WorkflowStatus(newStatus));
 
         wfStatus = WorkflowStatus(newStatus);
-    }
-
-    /**
-     * @dev Updates the session # and clears proposals  
-     */
-    function initialize() internal {
-        currentSession++;
-        while (proposals.length > 0) {
-            proposals.pop();
-        }
     }
 
     /**
