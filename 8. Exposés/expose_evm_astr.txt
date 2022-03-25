@@ -1,0 +1,96 @@
+ASTAR (PLASM) - Polkadot
+Shiden - Kusama
+
+Kesako ?
+
+Plasm est une parachain de polkadot construite avec le framework Substrate. Elle vise a faire Ethereum 2.0 sur Polkadot.
+
+Team : Stake Technologies (Sota Watanabe)
+
+Consensus PoS (dApps Staking) dont 50% des récompenses de staking sont rétribués aux développeurs  
+
+X-VM (Cross Virtual Machine) : couche d'abstraction qui permet aux SC d'exécuter des appels et de lire des données de stockage à partir de digfférentes VMs et langages
+(exemple: interactions entre dApps Solidity & ink!) 
+
+La vision de Gavin Wood (polkadot) et d'Astar est que les SC WebAssembly (WASM) sont l'avenir mais qu'il faut faire le pont entre l'EVM et WASM.
+
+L'architecture d'Astar et Shiden
+Astar/Shiden sont des hubs de SC multi-chaînes évolutifs sur Polkadot/Kusama qui prennent en charge nativement EVM et WASM. 
+Aujourd'hui, les développeurs peuvent déployer des SC Solidity et ink! sur le testnet d'Astar Network, Dusty.
+De nombreuses personnes connaissent déjà EVM et ses développements. 
+
+
+Pourquoi WASM ? https://fr.wikipedia.org/wiki/WebAssembly
+
+ - Les performances de WASM sont très élevées (vitesse & sécurité). Le langage est conçu pour être aussi proche que possible du code machine natif tout en restant indépendant.
+
+ - WASM réduit considérablement les temps de traitement dans les navigateurs grâce à l'utilisation de petits binaires. Cela offre une grande évolutivité aux connexions Internet potentiellement lentes qui souhaitent utiliser la technologie blockchain.
+ 
+  - WASM a été développé pour que le code puisse être déployé dans n'importe quel navigateur avec le même résultat. Contrairement à l'EVM, il n'a pas été développé vers un cas d'utilisation très spécifique. Cela a l'avantage de disposer de nombreux outils et de grandes entreprises qui consacrent beaucoup de ressources à la poursuite du développement de WASM.
+
+ - WASM étend l'utilisation des langages aux développeurs de SC pour inclure Rust, C/C++, C#, Typescript, Haxe et Kotlin. Cela signifie que les développeurs peuvent rédiger des contrats intelligents dans le langage qui leur est familier.
+ 
+ 
+LAYER 2 
+
+Scalabilité 
+
+Ethereum : 15      transactions par secondes
+VISA     : 1.700   tps
+Alipay   : 256.000 tps
+ 
+Pour résoudre ce problème, les solutions de scalabilité :
+
+ - SegWit : Correction de la malléabilité des transactions en supprimant les informations de signature et en les stockant en dehors du bloc de transaction de base. (ex: Bitcoin)
+ 
+ - State Channel : Combiner les transactions hors-chaîne entre des utilisateurs particuliers et seul l'état final est engagé dans la chaîne de blocs principale.
+ 
+ - Sharding : Permettre à beaucoup plus de transactions d'être traitées en parallèle en même temps en créant des fragments. (multithreading)	
+ 
+ - Plasma : Stockage des transactions dans des chaînes enfants distinctes et seul le hash racine est stocké dans la chaîne principale.
+ 
+ - OVM
+ 
+ - ZKRollups : ZKRollup est une solution de mise à l'échelle L2 dans laquelle tous les fonds sont détenus par un SC sur la chaîne principale.
+
+En fin de compte, le modèle de blockchain peut évoluer, où la couche 1 est utilisée comme couche de confiance et la couche 2 est la couche de transaction.
+
+
+Qu'est-ce qu'une machine virtuelle optimiste ?
+
+L'OVM (Optimistic Virtual Machine) est une machine virtuelle conçue pour supporter tous les protocoles de layer 2. 
+Il s'agit d'une unification possible de tous les protocoles de couche 2, ce qui signifie : Astar Network ne sera pas seulement pour les applications Plasma mais aussi pour les applications Lightning Network ou tout autre protocole de couche 2.
+Astar Network hébergera toutes les solutions de salabilité de la couche 2. Les utilisateurs peuvent choisir la solution à utiliser et rendre leur cas d'utilisation possible avec un minimum de frais.
+
+		
+--------------------------------------------------------------------------------
+layer 2  | Polygon | Avalanche | Optimism | Arbitrum | 
+-------------------------------------------------------------------------------
+layer 1  | Ethereum
+-------------------------------------------------------------------------------
+layer 0  |
+-------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+PLASM vs Moonbeam
