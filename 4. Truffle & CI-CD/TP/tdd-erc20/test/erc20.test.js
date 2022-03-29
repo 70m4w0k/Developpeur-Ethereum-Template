@@ -1,4 +1,4 @@
-// erc20.test.js 
+// voting.test.js 
 const { BN, ether } = require('@openzeppelin/test-helpers');
 const { expect } = require('chai');
 const ERC20 = artifacts.require('ERC20Token');

@@ -2,6 +2,10 @@ node_modules/
 bin/
 build/
 
+#coverages
+coverage/
+coverage.json
+
 projet1/projet1_tests.md
 
 # logs
