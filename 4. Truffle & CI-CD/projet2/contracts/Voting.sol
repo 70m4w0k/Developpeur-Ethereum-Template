@@ -50,7 +50,7 @@ contract Voting is Ownable {
 
     // ::::::::::::: GETTERS ::::::::::::: //
 
-    function getVoter(address _addr) external view returns (Voter memory) {
+    function getVoter(address _addr) external onlyVoters view returns (Voter memory) {
         return voters[_addr];
     }
     
