@@ -31,6 +31,14 @@ module.exports = {
 
   plugins: ["solidity-coverage"],
 
+  mocha: {
+    reporter: 'eth-gas-reporter',
+     reporterOptions : { 
+       gasPrice:1,
+       token:'ETH',
+      }
+   },
+
   // Configure your compilers
   compilers: {
     solc: {

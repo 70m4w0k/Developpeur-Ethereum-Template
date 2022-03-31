@@ -5,57 +5,103 @@ const { assertion } = require('../node_modules/@openzeppelin/test-helpers/src/ex
 const { expect } = require('chai');
 const Students = artifacts.require('Students');
 contract('STUDENTS', function (accounts) {
-    const student1 = accounts[0];
-    // const student2 = accounts[1];
-    // const student3 = accounts[2];
-    
-    beforeEach(async function () {
-        this.StudentsInstance = await Students.new();
-    });
+    const alice = accounts[0];
+    const bob = accounts[1];
+    const charlie = accounts[2];
 
-    it('should create a new etudiant', async function () {
-        await this.StudentsInstance.set(student1, "michel", 13);
-        const etudiant = await this.StudentsInstance.EtudiantsMap(student1);
-        expect(etudiant.name).to.equal("michel");
-        expect(etudiant.note).to.be.bignumber.equal(new BN(13));
-    });
+    let StudentsInstance;
 
-    describe('GET', async function () {
+    describe('test setter', async function () {
 
-        beforeEach(async function () {
-            await this.StudentsInstance.set(student1, "michel", 13);
+        before(async function () {
+            StudentsInstance = await Students.new();
         });
 
-        it('should return etudiant from array', async function () {
-            const etudiant = await this.StudentsInstance.getArray("michel");
-            expect(etudiant.name).to.equal("michel");
-            expect(etudiant.note).to.be.bignumber.equal(new BN(13));
+        it("should store name student in mapping", async () => {
+            await StudentsInstance.set(alice,"alice", 12);
+            const storedData = await StudentsInstance.EtudiantsMap(alice);
+            expect(storedData.name).to.equal("alice");
         });
 
-        it('should return etudiant from mapping', async function () {
-            const etudiant = await this.StudentsInstance.getMap(student1);
-            expect(etudiant.name).to.equal("michel");
-            expect(etudiant.note).to.be.bignumber.equal(new BN(13));
+        it("should store note student in mapping", async () => {
+            await StudentsInstance.set(alice,"alice", 12);
+            const storedData = await StudentsInstance.EtudiantsMap(alice);
+            expect(new BN(storedData.note)).to.be.bignumber.equal(new BN(12));
         });
-        
-        it('should return nothing : name doesnt exist', async function () {
-            const etudiant = await this.StudentsInstance.getArray("paul");
-            expect(etudiant.name).to.equal("");
-            expect(etudiant.note).to.be.bignumber.equal(new BN(0));
+
+        it("should store name student in array", async () => {
+            await StudentsInstance.set(alice,"alice", 12);
+            const storedData = await StudentsInstance.EtudiantsArray(0);
+            expect(storedData.name).to.equal("alice");
+        });
+
+        it("should store note student in array", async () => {
+            await StudentsInstance.set(alice,"alice", 12);
+            const storedData = await StudentsInstance.EtudiantsArray(0);
+            expect(new BN(storedData.note)).to.be.bignumber.equal(new BN(12));
         });
         
-        it('should delete a etudiant from map', async function () {
-            await this.StudentsInstance.deleter(student1);
-            const etudiant = await this.StudentsInstance.EtudiantsMap(student1);
-            expect(etudiant.name).to.equal("");
-            expect(etudiant.note).to.be.bignumber.equal(new BN(0));
+    });
+
+    describe('test getter', async function () {
+
+        before(async function () {
+            StudentsInstance = await Students.new();
+            await StudentsInstance.set(alice,"alice", 12);
         });
 
-        it('should delete a etudiant from array', async function () {
-            await this.StudentsInstance.deleter(student1);
-            const etudiant = await this.StudentsInstance.EtudiantsArray(0);
-            expect(etudiant.name).to.equal("");
-            expect(etudiant.note).to.be.bignumber.equal(new BN(0));
+        it("should return student name from mapping", async () => {
+            const storedData = await StudentsInstance.getMap(alice);
+            expect(storedData.name).to.equal("alice");
         });
+
+        it("should return student note from mapping", async () => {
+            const storedData = await StudentsInstance.getMap(alice);
+            expect(new BN(storedData.note)).to.be.bignumber.equal(new BN(12));
+        });
+
+        it("should return student name from array", async () => {
+            const storedData = await StudentsInstance.getArray("alice");
+            expect(storedData.name).to.equal("alice");
+        });
+
+        it("should return student note from array", async () => {
+            const storedData = await StudentsInstance.getArray("alice");
+            expect(new BN(storedData.note)).to.be.bignumber.equal(new BN(12));
+        });
+        
     });
+
+    describe('test deleter', async function () {
+
+        before(async function () {
+            StudentsInstance = await Students.new();
+            await StudentsInstance.set(alice,"alice", 12);
+            await StudentsInstance.set(bob,"bob", 18);
+            await StudentsInstance.set(charlie,"charlie", 8);
+            await StudentsInstance.deleter(charlie);
+        });
+
+        it("should delete name in mapping", async () => {
+            const storedData = await StudentsInstance.getMap(charlie);
+            expect(storedData.name).to.equal("");
+        });
+
+        it("should delete note in mapping", async () => {
+            const storedData = await StudentsInstance.getMap(charlie);
+            expect(new BN(storedData.note)).to.be.bignumber.equal(new BN(0));
+        });
+
+        it("should delete name in array", async () => {
+            const storedData = await StudentsInstance.getArray("charlie");
+            expect(storedData.name).to.equal("");
+        });
+
+        it("should delete note in array", async () => {
+            const storedData = await StudentsInstance.getArray("charlie");
+            expect(new BN(storedData.note)).to.be.bignumber.equal(new BN(0));
+        });
+        
+    });
+
 });

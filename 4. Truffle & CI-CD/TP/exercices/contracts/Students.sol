@@ -3,38 +3,38 @@ pragma solidity 0.8.13;
 
 contract Students {
 
-struct Etudiant{
-    string name;
-    uint note;
-}
+    struct Etudiant{
+        string name;
+        uint note;
+    }
 
-Etudiant[] public EtudiantsArray;
-mapping(address => Etudiant) public EtudiantsMap;
+    Etudiant[] public EtudiantsArray;
+    mapping(address => Etudiant) public EtudiantsMap;
 
-function getArray(string calldata _name) public view returns (Etudiant memory john) {
-    for (uint i; i<EtudiantsArray.length; i++){
-        if (keccak256(abi.encodePacked(_name)) == keccak256(abi.encodePacked(EtudiantsArray[i].name))){
-            return john = EtudiantsArray[i];
+    function getArray(string calldata _name) public view returns (Etudiant memory john) {
+        for (uint i; i<EtudiantsArray.length; i++){
+            if (keccak256(abi.encodePacked(_name)) == keccak256(abi.encodePacked(EtudiantsArray[i].name))){
+                return john = EtudiantsArray[i];
+            }
         }
     }
-}
 
-function getMap(address _addr) public view returns (Etudiant memory) {
-    return EtudiantsMap[_addr];
-}
-
-function set(address _addr, string calldata _name, uint _note) public {
-    EtudiantsMap[_addr].name=_name;
-    EtudiantsMap[_addr].note=_note;
-    EtudiantsArray.push(Etudiant(_name,_note));
-}
-
-function deleter(address _addr) public {
-    for (uint i; i<EtudiantsArray.length; i++){
-        if (keccak256(abi.encodePacked(EtudiantsArray[i].name)) == keccak256(abi.encodePacked(EtudiantsMap[_addr].name))){
-            delete EtudiantsArray[i];
-        }
+    function getMap(address _addr) public view returns (Etudiant memory) {
+        return EtudiantsMap[_addr];
     }
-    delete EtudiantsMap[_addr];
-}
+
+    function set(address _addr, string calldata _name, uint _note) public {
+        EtudiantsMap[_addr].name=_name;
+        EtudiantsMap[_addr].note=_note;
+        EtudiantsArray.push(Etudiant(_name,_note));
+    }
+
+    function deleter(address _addr) public {
+        for (uint i; i<EtudiantsArray.length; i++){
+            if (keccak256(abi.encodePacked(EtudiantsArray[i].name)) == keccak256(abi.encodePacked(EtudiantsMap[_addr].name))){
+                delete EtudiantsArray[i];
+            }
+        }
+        delete EtudiantsMap[_addr];
+    }
 }
