@@ -7,8 +7,8 @@ import "../node_modules/@openzeppelin/contracts/access/Ownable.sol";
 contract Voting is Ownable {
 
     // arrays for draw, uint for single
-    // uint[] winningProposalsID;
-    // Proposal[] public winningProposals;
+    uint[] public winningProposalsID;
+    Proposal[] public winningProposals;
     uint public winningProposalID;
     
     struct Voter {
@@ -69,13 +69,12 @@ contract Voting is Ownable {
         emit VoterRegistered(_addr);
     }
  
-    /* facultatif
-     * function deleteVoter(address _addr) external onlyOwner {
-     *   require(workflowStatus == WorkflowStatus.RegisteringVoters, 'Voters registration is not open yet');
-     *   require(voters[_addr].isRegistered == true, 'Not registered.');
-     *   voters[_addr].isRegistered = false;
-     *  emit VoterRegistered(_addr);
-    }*/
+    function deleteVoter(address _addr) external onlyOwner {
+        require(workflowStatus == WorkflowStatus.RegisteringVoters, 'Voters registration is not open yet');
+        require(voters[_addr].isRegistered == true, 'Not registered.');
+        voters[_addr].isRegistered = false;
+        emit VoterRegistered(_addr);
+    }
 
     // ::::::::::::: PROPOSAL ::::::::::::: // 
 
@@ -155,7 +154,7 @@ contract Voting is Ownable {
         emit WorkflowStatusChange(WorkflowStatus.VotingSessionStarted, WorkflowStatus.VotingSessionEnded);
     }
 
-    /* function tallyVotesDraw() external onlyOwner {
+    function tallyVotesDraw() external onlyOwner {
        require(workflowStatus == WorkflowStatus.VotingSessionEnded, "Current status is not voting session ended");
         uint highestCount;
         uint[5]memory winners; // egalite entre 5 personnes max
@@ -178,7 +177,7 @@ contract Voting is Ownable {
         }
         workflowStatus = WorkflowStatus.VotesTallied;
         emit WorkflowStatusChange(WorkflowStatus.VotingSessionEnded, WorkflowStatus.VotesTallied);
-    } */
+    }
 
    function tallyVotes() external onlyOwner {
         require(workflowStatus == WorkflowStatus.VotingSessionEnded, "Current status is not voting session ended");

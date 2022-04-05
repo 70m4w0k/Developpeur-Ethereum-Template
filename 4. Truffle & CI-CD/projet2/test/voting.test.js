@@ -167,6 +167,41 @@ contract('VOTING', function (accounts) {
         });
         
     });
+
+    describe('delete voter', async function () {
+
+        beforeEach(async function () {
+            this.VotingInstance = await Voting.new();
+        });
+    
+        it('should revert because caller is not owner ', async function () {
+            await expectRevert(this.VotingInstance.deleteVoter(alice, {from: alice}), "Ownable: caller is not the owner");
+        });
+
+        it('should revert because of wrong WorkflowStatus', async function () {
+            await this.VotingInstance.startProposalsRegistering();
+            await expectRevert(this.VotingInstance.deleteVoter(alice), "Voters registration is not open yet");
+        });
+
+        it('should revert because voter is not registred ', async function () {
+            await expectRevert(this.VotingInstance.deleteVoter(alice), "Not registered.");
+        });
+        
+        it('should emit event \'VoterRegistered\'', async function () {
+            await this.VotingInstance.addVoter(alice);
+            const txReceipt = await this.VotingInstance.deleteVoter(alice);
+            expectEvent(txReceipt, 'VoterRegistered', {voterAddress: alice});
+        });    
+        
+        it('isRegistred field from new voter should be false', async function () {
+            await this.VotingInstance.addVoter(alice);
+            await this.VotingInstance.addVoter(bob);
+            await this.VotingInstance.deleteVoter(alice, {from: owner}); 
+            let newVoter = await this.VotingInstance.getVoter(alice, {from: bob}); 
+            expect(newVoter.isRegistered).to.equal(false, "Voter is not registred");
+        });
+        
+    });
     
     // ::::::::::::: PROPOSAL ::::::::::::: // 
     
@@ -297,6 +332,66 @@ contract('VOTING', function (accounts) {
             await this.VotingInstance.tallyVotes();
             let winnerID = await this.VotingInstance.winningProposalID();
             expect(winnerID).to.be.bignumber.equal(new BN(1));
+        });
+
+    });
+
+    describe('tally votes draw', async function () {
+        
+        beforeEach(async function () {
+            this.VotingInstance = await Voting.new();
+            await this.VotingInstance.addVoter(alice);
+            await this.VotingInstance.addVoter(bob);
+            await this.VotingInstance.startProposalsRegistering();
+            await this.VotingInstance.addProposal("proposal 1", {from: alice});
+            await this.VotingInstance.addProposal("proposal 2", {from: alice});
+            await this.VotingInstance.endProposalsRegistering();
+            await this.VotingInstance.startVotingSession();
+            await this.VotingInstance.setVote(0, {from: alice});
+            await this.VotingInstance.setVote(1, {from: bob});
+        });
+        
+        it('should revert because caller is not the owner', async function () {
+            await expectRevert(this.VotingInstance.tallyVotesDraw({from: alice}), "Ownable: caller is not the owner");     
+        });
+        
+        it('should revert because of wrong WorkflowStatus', async function () {
+            await expectRevert(this.VotingInstance.tallyVotesDraw(), "Current status is not voting session ended");
+        });
+        
+        it('should emit \'WorkflowStatusChange\'', async function () {
+            await this.VotingInstance.endVotingSession();
+            const txReceipt = await this.VotingInstance.tallyVotesDraw();
+            expectEvent(txReceipt, 'WorkflowStatusChange', {previousStatus: new BN(4), newStatus: new BN(5)});
+        });
+
+        describe('should store', async function () {
+        
+            beforeEach(async function () {
+                await this.VotingInstance.endVotingSession();
+                await this.VotingInstance.tallyVotesDraw();
+            });
+
+            it('1rst winning proposal ID in winningProposalsID', async function () {
+                let firstWinner = await this.VotingInstance.winningProposalsID(0);
+                expect(firstWinner).to.be.bignumber.equal(new BN(0));
+            });
+    
+            it('2nd winning proposal ID in winningProposalsID', async function () {
+                let secondWinner = await this.VotingInstance.winningProposalsID(1);
+                expect(secondWinner).to.be.bignumber.equal(new BN(1));
+            });
+    
+            it('1rst winning proposal in winningProposals', async function () {
+                let firstProposal = await this.VotingInstance.winningProposals(0);
+                expect(firstProposal.description).to.equal("proposal 1");
+            });
+
+            it('2nd winning proposal in winningProposals', async function () {
+                let secondProposal = await this.VotingInstance.winningProposals(1);
+                expect(secondProposal.description).to.equal("proposal 2");
+            });
+
         });
 
     });
