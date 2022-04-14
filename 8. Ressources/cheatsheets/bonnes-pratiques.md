@@ -26,13 +26,13 @@ https://medium.com/blockchannel/the-use-of-revert-assert-and-require-in-solidity
 
 ## 2. Attention à l'arrondi avec division par nombre entier
 
-### pas bien
+### :x:
     uint x = 5 / 2; // x = 2
 
 L'utilisation d'un multiplicateur permet d'éviter l'arrondi à l'entier inférieur, ce multiplicateur doit être pris
 en compte lorsque vous travaillerez avec x à l'avenir :
 
-### bien
+### :heavy_check_mark:
     uint multiplier = 10;
     uint x = (5 * multiplier) / 2;
 
@@ -74,11 +74,11 @@ Il faut vérifier que les données sont vides si la fonction fallback est destin
 Sinon, les appelants n'apercevront pas si votre contrat est mal utilisé et si des
 fonctions qui n'existent pas sont appelées.
 
-### pas bien
+### :x:
 
     fallback() payable { balances[msg.sender] += msg.value; }
 
-### bien
+### :heavy_check_mark:
 
     fallback() payable { 
         require(msg.data.length == 0);
@@ -91,11 +91,11 @@ https://blog.soliditylang.org/2020/03/26/fallback-receive-split/
 
 ## 5. Verrouiller pragmas à une version précise du compilateur 
 
-### pas bien 
+### :x: 
 
     pragma solidity ^0.8.0;
 
-### bien
+### :heavy_check_mark:
 
     pragma solidity 0.8.13;
 
@@ -118,7 +118,7 @@ Lorsqu'une fonction prend une adresse de contrat comme argument, il est préfér
         function validate(uint) external returns(bool);
     }
 
-### bien
+### :heavy_check_mark:
 
     contract TypeSafeAuction {
         function validateBet(Validator _validator, uint _value) internal returns(bool) {
@@ -127,7 +127,7 @@ Lorsqu'une fonction prend une adresse de contrat comme argument, il est préfér
         }
     }
 
-### pas bien
+### :x:
 
     contract TypeUnsafeAuction {
         function validateBet(address _addr, uint _value) internal returns(bool) {
@@ -162,7 +162,7 @@ Lorsque nous arrangeons les variables de manière à ce que plusieurs d'entre el
 
 Comme chaque emplacement de stockage coûte du gas, le regroupement des variables nous aide à optimiser notre utilisation du gas en réduisant le nombre d'emplacements requis par notre contrat.
 
-### pas bien
+### :x:
 
     uint128 a;
     uint256 b;
@@ -175,7 +175,7 @@ Comme chaque emplacement de stockage coûte du gas, le regroupement des variable
     ----------------------------------------
     
 
-### bien 
+### :heavy_check_mark: 
 
     uint128 a;
     uint128 c;
