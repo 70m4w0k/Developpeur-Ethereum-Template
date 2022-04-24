@@ -16,8 +16,6 @@ contract Voting is Ownable {
 
     // arrays for draw, uint for single
     uint public winningProposalID;
-    uint[] public winningProposalsID;
-    Proposal[] public winningProposals;
     
     struct Voter {
         bool isRegistered;
@@ -147,30 +145,6 @@ contract Voting is Ownable {
 
     // ::::::::::::: STATE ::::::::::::: //
 
-    /* on pourrait factoriser tout ça: par exemple:
-    *
-    *  modifier checkWorkflowStatus(uint  _num) {
-    *    require (workflowStatus=WorkflowStatus(uint(_num)-1, "bad workflowstatus");
-    *    require (num != 5, "il faut lancer tally votes");
-    *    _;
-    *  }
-    *
-    *  function setWorkflowStatus(WorkflowStatus _num) public checkWorkflowStatus( _num) onlyOwner {
-    *    WorkflowStatus old = workflowStatus;
-    *    workflowStatus = WorkflowStatus(_num);
-    *    emit WorkflowStatusChange(old, workflowStatus);
-    *   } 
-    *
-    *  ou plus simplement:
-    *  function nextWorkflowStatus() onlyOwner{
-    *    require (uint(workflowStatus)!=4, "il faut lancer tallyvotes");
-    *    WorkflowStatus old = workflowStatus;
-    *    workflowStatus= WorkflowStatus(uint (workflowstatus) + 1);
-    *    emit WorkflowStatusChange(old, workflowStatus);
-    *  }
-    *
-    */ 
-
     /**
      * @dev Allows owner to start a proposal session
      *
@@ -225,32 +199,7 @@ contract Voting is Ownable {
     * WorkflowStatusChange |0|1|2|3|4|5|
     *                                 ^
     */
-    function tallyVotesDraw() external onlyOwner {
-       require(workflowStatus == WorkflowStatus.VotingSessionEnded, "Current status is not voting session ended");
-        uint highestCount;
-        uint[5]memory winners; // egalite entre 5 personnes max
-        uint nbWinners;
-        for (uint i = 0; i < proposalsArray.length; i++) {
-            if (proposalsArray[i].voteCount == highestCount) {
-                winners[nbWinners]=i;
-                nbWinners++;
-            }
-            if (proposalsArray[i].voteCount > highestCount) {
-                delete winners;
-                winners[0]= i;
-                highestCount = proposalsArray[i].voteCount;
-                nbWinners=1;
-            }
-        }
-        for(uint j=0;j<nbWinners;j++){
-            winningProposalsID.push(winners[j]);
-            winningProposals.push(proposalsArray[winners[j]]);
-        }
-        workflowStatus = WorkflowStatus.VotesTallied;
-        emit WorkflowStatusChange(WorkflowStatus.VotingSessionEnded, WorkflowStatus.VotesTallied);
-    }
-
-   function tallyVotes() external onlyOwner {
+    function tallyVotes() external onlyOwner {
         require(workflowStatus == WorkflowStatus.VotingSessionEnded, "Current status is not voting session ended");
         uint _winningProposalId;
         for (uint256 p = 0; p < proposalsArray.length; p++) {
