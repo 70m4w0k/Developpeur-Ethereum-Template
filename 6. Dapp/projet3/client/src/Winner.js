@@ -10,7 +10,7 @@ export default class Addresse extends React.Component {
                         And the winner is 
                     </h2>
                     <div>{this.props.winningProposal.description}</div>
-                    <div>Nombre de votes : {this.props.winningProposal.voteCount}</div>
+                    <div>Number of votes : {this.props.winningProposal.voteCount}</div>
                 </div>
             )
         } else {

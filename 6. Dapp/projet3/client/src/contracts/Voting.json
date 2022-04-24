@@ -24876,15 +24876,15 @@
     "version": "0.8.13+commit.abaa5c0e.Emscripten.clang"
   },
   "networks": {
-    "1650807725442": {
+    "1650824302425": {
       "events": {},
       "links": {},
-      "address": "0x4D8f5f11671eeB90A2ac79e8bC18F87E94B203D0",
-      "transactionHash": "0x6c90b18bb86a5ce81e6d22368b5bc13c352372d827553caa05ca1e69fa5e0f9c"
+      "address": "0xdf46f51303424AECab97e2aD275696dFf4352A3C",
+      "transactionHash": "0xe65ba181d39fc9ab1dabac235631a1044c1d9640208c6082569cc1dec5b57985"
     }
   },
   "schemaVersion": "3.4.6",
-  "updatedAt": "2022-04-24T18:04:38.917Z",
+  "updatedAt": "2022-04-24T18:32:46.684Z",
   "networkType": "ethereum",
   "devdoc": {
     "details": "Voting smart contract for small organisations :      The owner need to register voters on a whitelist via their ethereum addresses.  The voters can submit new proposals during a proposal registration session,   and can vote on proposals during the voting session.    Vote is not secret. Each voter can see the votes of others. Possible draws.",

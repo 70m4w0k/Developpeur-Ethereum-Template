@@ -350,26 +350,6 @@ class App extends Component {
           </div>
           <div className="left">
             <Addresse owner={this.state.owner} isVoter={this.state.isVoter} addr={this.state.accounts[0]} />
-            <div>
-              <p>
-                <button onClick={this.runStartProposals}>Start Proposals Registering</button>
-              </p>
-              <p>
-                <button onClick={this.runEndProposals}>End Proposals Registering</button>
-              </p>
-              <p>
-                <button onClick={this.runStartVoting}>Start Voting Session</button>
-              </p>
-              <p>
-                <button onClick={this.runEndVoting}>End Voting Session</button>
-              </p>
-              <p>
-                <button onClick={this.runTallyVotes}>Tally votes</button>
-              </p>
-              <p>
-                <button onClick={this.getWinningProposal}>Winner</button>
-              </p>
-            </div>
           </div>
           <div className="center form">
             <div>Proposals registered, you will be able to vote during Voting session</div>
