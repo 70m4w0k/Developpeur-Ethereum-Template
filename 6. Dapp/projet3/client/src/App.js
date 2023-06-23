@@ -9,16 +9,16 @@ import Winner from "./Winner.js";
 import "./App.css";
 
 class App extends Component {
-  state = { 
-    owner: null, 
+  state = {
+    owner: null,
     isVoter: null,
-    wfStatus: null, 
-    voters: null, 
+    wfStatus: null,
+    voters: null,
     proposals: null,
     winningProposal: null,
-    web3: null, 
-    accounts: null, 
-    contract: null 
+    web3: null,
+    accounts: null,
+    contract: null
   };
 
   componentDidMount = async () => {
@@ -35,13 +35,13 @@ class App extends Component {
 
       const owner = await instance.methods.owner().call();
 
-      const options = { 
+      const options = {
         fromBlock: 0,
         toBlock : 'latest'
       }
       const voters = await instance.getPastEvents('VoterRegistered', options);
       const wfStatus = await instance.methods.workflowStatus().call();
-      const nbrProposals = await instance.getPastEvents('ProposalRegistered', options);    
+      const nbrProposals = await instance.getPastEvents('ProposalRegistered', options);
 
       const isVoter = await this.isVoter(accounts[0], voters);
       const proposalList = [];
@@ -65,7 +65,7 @@ class App extends Component {
     const { accounts, contract} = this.state;
     let voter=document.getElementById("voter").value;
     await contract.methods.addVoter(voter).send({ from: accounts[0] });
-    const options = { 
+    const options = {
       fromBlock: 0,
       toBlock : 'latest'
     }
@@ -134,7 +134,7 @@ class App extends Component {
 
   getProposals = async () => {
     const { accounts, contract } = this.state;
-    const options = { 
+    const options = {
       fromBlock: 0,
       toBlock : 'latest'
     }
@@ -192,7 +192,7 @@ class App extends Component {
           </div>
           <div className="right">
             <VoterList voters={this.state.voters} />
-          </div> 
+          </div>
         </div>
       );
     } else if (this.state.wfStatus === '0' && this.state.isVoter) {
@@ -211,7 +211,7 @@ class App extends Component {
           <div className="right">
             <VoterList voters={this.state.voters} />
           </div>
-                  
+
         </div>
       );
     } else if (this.state.wfStatus === '1' && this.state.owner === this.state.accounts[0]) {
@@ -260,7 +260,7 @@ class App extends Component {
                 </tr>
                 ))}
             </table>
-          </div>          
+          </div>
         </div>
       );
     } else if (this.state.wfStatus === '1' && this.state.isVoter) {
@@ -338,7 +338,7 @@ class App extends Component {
                 </tr>
                 ))}
             </table>
-          </div>          
+          </div>
         </div>
       );
     } else if (this.state.wfStatus === '2') {
@@ -445,7 +445,7 @@ class App extends Component {
                 ))}
             </table>
           </div>
-          
+
         </div>
       );
     } else if (this.state.wfStatus === '4' && this.state.owner === this.state.accounts[0]) {
@@ -520,7 +520,7 @@ class App extends Component {
                 </tr>
                 ))}
             </table>
-          </div>          
+          </div>
         </div>
       );
     } else if (this.state.wfStatus === '5') {
@@ -574,7 +574,7 @@ class App extends Component {
           </div>
           <div className="right">
             <VoterList voters={this.state.voters} />
-          </div> 
+          </div>
         </div>
       );
     }
